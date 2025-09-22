@@ -7,20 +7,38 @@ import { createServer } from "./server";
 export default defineConfig(({ mode }) => ({
   server: {
     host: true, // listen on all addresses (IPv4 & IPv6)
-    port: Number(process.env.PORT) || 8080,
+    port: Number(process.env.PORT) || 3001,
     strictPort: false, // fall back if the port is taken
+    hmr: {
+      overlay: false, // Disable error overlay for faster startup
+    },
     fs: {
-      // Allow serving files from project root, client and shared dirs
       allow: [
-        path.resolve(__dirname, "."),
-        path.resolve(__dirname, "./client"),
-        path.resolve(__dirname, "./shared"),
+        path.resolve(__dirname),          // allow project root (serves index.html)
+        path.resolve(__dirname, "client"),
+        path.resolve(__dirname, "shared"),
       ],
-      deny: [".env", ".env.", ".{crt,pem}", "/.git/", "server/"],
+      deny: [
+        ".env",
+        ".env.*",
+        "*.{crt,pem}",
+        "**/.git/**",
+        "server/**",
+      ],
     },
   },
   build: {
     outDir: "dist/spa",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          charts: ['recharts'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+        },
+      },
+    },
   },
   plugins: [react(), expressPlugin()],
   resolve: {
@@ -28,6 +46,22 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./client"),
       "@shared": path.resolve(__dirname, "./shared"),
     },
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'lucide-react',
+      'firebase/app',
+      'firebase/auth',
+      'firebase/firestore',
+    ],
+    exclude: ['@react-three/fiber', '@react-three/drei', 'three'],
+  },
+  esbuild: {
+    target: 'esnext',
+    minify: mode === 'production',
   },
 }));
 

@@ -34,23 +34,30 @@ export function HowItWorks() {
           {steps.map((s) => (
             <div
               key={s.title}
-              className="relative rounded-2xl overflow-hidden shadow-sm h-56"
+              className="group relative mt-4 overflow-hidden rounded-2xl shadow-sm h-56"
               aria-label={s.title}
             >
               <div
-                className="absolute inset-0 bg-cover bg-center"
+                className="w-full h-full scale-105 group-hover:scale-100 transition-all duration-300 bg-cover bg-center"
                 style={{ backgroundImage: `url(${s.img})` }}
                 aria-hidden
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent" />
+              <article className="absolute inset-0 p-6 flex flex-col justify-end rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-sm">
+                <div className="translate-y-6 group-hover:translate-y-0 transition-all duration-300 space-y-2">
+                  <h1 className="md:text-2xl font-semibold text-white">
+                    {s.title}
+                  </h1>
+                  <p className="sm:text-base text-sm text-white/90">{s.desc}</p>
+                </div>
+              </article>
 
-              <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-                <h3 className="text-xl font-semibold text-white drop-shadow">
+              <article className="p-2 w-full h-[20%] flex flex-col justify-end overflow-hidden absolute bottom-0 rounded-b-md opacity-100 group-hover:opacity-0 group-hover:-bottom-4 transition-all duration-300 bg-gradient-to-t from-black/40">
+                <h1 className="md:text-2xl font-semibold text-white">
                   {s.title}
-                </h3>
-                <p className="mt-2 text-white/90 max-w-prose">{s.desc}</p>
-              </div>
+                </h1>
+                <p className="sm:text-base text-sm text-white/90" />
+              </article>
             </div>
           ))}
         </div>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Issue, Status, Priority, generateIssues, detectAndMergeDuplicates } from "@/lib/nivaran";
+import { upsertIssueLocation, isFirebaseConfigured } from "@/lib/firebase";
 
 interface DataContextValue {
   issues: Issue[];
@@ -7,6 +8,7 @@ interface DataContextValue {
   assign: (id: string, staffName: string) => void;
   setStatus: (id: string, status: Status) => void;
   regenerate: (count: number) => void;
+  ensureMockFor: (staffName: string) => void;
 }
 
 const DataContext = createContext<DataContextValue | undefined>(undefined);
@@ -55,7 +57,39 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     write(seed);
   };
 
-  const value = useMemo<DataContextValue>(() => ({ issues, setIssues, assign, setStatus, regenerate }), [issues]);
+  const ensureMockFor: DataContextValue["ensureMockFor"] = (staffName) => {
+    if (!staffName) return;
+    const exists = issues.some((i) => i.assignment.staffName === staffName);
+    if (exists) return;
+    const now = new Date();
+    const id = crypto.randomUUID();
+    const norm = staffName.toLowerCase().replace(/\s+/g, "-");
+    const mock: Issue = {
+      id,
+      title: "Mock: Streetlight not working",
+      description: "Demonstration issue assigned to you. Replace with real data when connected.",
+      category: "Streetlight",
+      imageUrl: "/placeholder.svg",
+      latitude: 28.6139,
+      longitude: 77.209,
+      address: "Ward 1, Zone 1",
+      createdAt: now.toISOString(),
+      updatedAt: now.toISOString(),
+      upvotes: 0,
+      priority: 2,
+      status: "Pending",
+      assignment: { staffId: norm, staffName, assignedAt: now.toISOString() },
+      reporter: { id: "demo", name: "Citizen Demo" },
+      duplicateOf: null,
+      groupId: "",
+    };
+    write([mock, ...issues]);
+    if (isFirebaseConfigured()) {
+      upsertIssueLocation(id, mock.latitude, mock.longitude, mock.address);
+    }
+  };
+
+  const value = useMemo<DataContextValue>(() => ({ issues, setIssues, assign, setStatus, regenerate, ensureMockFor }), [issues]);
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 }
 

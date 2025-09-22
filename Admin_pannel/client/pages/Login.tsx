@@ -58,7 +58,6 @@ export default function Login() {
                 <SelectContent>
                   <SelectItem value="admin">Admin</SelectItem>
                   <SelectItem value="supervisor">Supervisor</SelectItem>
-                  <SelectItem value="field">Field Staff</SelectItem>
                 </SelectContent>
               </Select>
             </div>

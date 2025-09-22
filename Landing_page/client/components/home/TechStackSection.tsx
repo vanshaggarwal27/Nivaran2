@@ -1,14 +1,46 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Cursor } from "@/components/ui/cursor";
+import { SVGProps } from "react";
+
+const MouseIcon = (props: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={26}
+      height={31}
+      fill="none"
+      {...props}
+    >
+      <g clipPath="url(#a)">
+        <path
+          fill={"#22c55e"}
+          fillRule="evenodd"
+          stroke={"#fff"}
+          strokeLinecap="square"
+          strokeWidth={2}
+          d="M21.993 14.425 2.549 2.935l4.444 23.108 4.653-10.002z"
+          clipRule="evenodd"
+        />
+      </g>
+      <defs>
+        <clipPath id="a">
+          <path fill={"#22c55e"} d="M0 0h26v31H0z" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
 
 const stack = [
   {
-    name: "React 18",
-    color: "bg-brand-blue",
+    name: "React",
+    color: "bg-blue-500",
     icon: () => (
-      <svg viewBox="0 0 24 24" className="h-5 w-5">
-        <circle cx="12" cy="12" r="2" fill="currentColor" />
-        <g fill="none" stroke="currentColor">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="#61DAFB">
+        <circle cx="12" cy="12" r="2" fill="#61DAFB" />
+        <g fill="none" stroke="#61DAFB" strokeWidth="1">
           <ellipse cx="12" cy="12" rx="11" ry="4" />
           <ellipse
             cx="12"
@@ -30,49 +62,59 @@ const stack = [
   },
   {
     name: "TypeScript",
-    color: "bg-brand-purple",
-    icon: () => <span className="text-[10px] font-bold">TS</span>,
-  },
-  {
-    name: "Vite",
-    color: "bg-brand-orange",
+    color: "bg-blue-600",
     icon: () => (
-      <svg viewBox="0 0 24 24" className="h-5 w-5">
-        <path d="M12 2L3 6l9 16 9-16-9-4z" fill="currentColor" />
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="white">
+        <path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.646-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 8.804 8.804 0 0 0-1.01-.461 9.784 9.784 0 0 1-1.088-.514 4.176 4.176 0 0 1-.896-.717 3.28 3.28 0 0 1-.596-.99 3.454 3.454 0 0 1-.21-1.25c0-.614.12-1.141.358-1.582.238-.441.58-.804 1.027-1.089a4.832 4.832 0 0 1 1.459-.629 7.78 7.78 0 0 1 1.765-.2zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/>
       </svg>
     ),
   },
   {
     name: "TailwindCSS",
-    color: "bg-brand-lime",
+    color: "bg-cyan-500",
     icon: () => (
-      <svg viewBox="0 0 24 24" className="h-5 w-5">
-        <path
-          d="M3 12c2-4 5-6 9-6s7 2 9 6c-2 4-5 6-9 6s-7-2-9-6z"
-          fill="currentColor"
-        />
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="#06B6D4">
+        <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
       </svg>
     ),
   },
   {
-    name: "Radix UI",
-    color: "bg-gray-800",
-    icon: () => <span className="text-[10px] font-bold">R</span>,
+    name: "Firebase",
+    color: "bg-orange-500",
+    icon: () => (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="#FFCA28">
+        <path d="M3.89 15.26L2.26 13.53a1.5 1.5 0 0 1-.2-1.8l1.5-2.4a1.5 1.5 0 0 1 1.2-.6h.3l1.5 2.4a1.5 1.5 0 0 1-.2 1.8L5.11 15.26a1.5 1.5 0 0 1-1.22.6zm16.22 0l-1.63-1.73a1.5 1.5 0 0 1-.2-1.8l1.5-2.4a1.5 1.5 0 0 1 1.2-.6h.3l1.5 2.4a1.5 1.5 0 0 1-.2 1.8l-1.63 1.73a1.5 1.5 0 0 1-1.22.6zM12 2L8.5 8.5l3.5 6.5 3.5-6.5L12 2z"/>
+      </svg>
+    ),
   },
   {
     name: "Express",
-    color: "bg-gray-700",
-    icon: () => <span className="text-[10px] font-bold">Ex</span>,
+    color: "bg-gray-800",
+    icon: () => (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="white">
+        <path d="M24 18.588a1.529 1.529 0 0 1-1.895-.72l-3.45-4.771-.5-.667-4.003 5.444a1.466 1.466 0 0 1-1.802.708l5.158-6.92-4.798-6.251a1.595 1.595 0 0 1 1.9.666l3.576 4.83 3.596-4.81a1.435 1.435 0 0 1 1.788-.668L21.708 7.9l-2.522 3.283a.666.666 0 0 0 .313.964l3.419 1.379a.665.665 0 0 0 .313-.964l-2.523-3.283 3.419-1.379a.666.666 0 0 0 .313-.964L24 18.588zM.002 11.576l.418-2.029c.163-.806.67-.5.88-.387l3.537 1.549a.651.651 0 0 1 .313.667l-.418 2.03a.651.651 0 0 1-.88.387L.315 12.243a.651.651 0 0 1-.313-.667z"/>
+      </svg>
+    ),
   },
   {
     name: "Node.js",
-    color: "bg-green-700",
-    icon: () => <span className="text-[10px] font-bold">N</span>,
+    color: "bg-green-600",
+    icon: () => (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="white">
+        <path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.728c-0.438-0.257-0.51-0.854-0.161-1.204c0.354-0.353,0.939-0.353,1.292,0l2.936,1.728c0.15,0.088,0.334,0.088,0.484,0l2.936-1.728c0.354-0.353,0.939-0.353,1.292,0c0.349,0.35,0.277,0.947-0.161,1.204l-2.936,1.728C12.639,23.916,12.319,24,11.998,24z M11.998,12c-0.321,0-0.641-0.084-0.922-0.247L8.14,10.025c-0.438-0.257-0.51-0.854-0.161-1.204c0.354-0.353,0.939-0.353,1.292,0l2.936,1.728c0.15,0.088,0.334,0.088,0.484,0l2.936-1.728c0.354-0.353,0.939-0.353,1.292,0c0.349,0.35,0.277,0.947-0.161,1.204l-2.936,1.728C12.639,11.916,12.319,12,11.998,12z M11.998,0c-0.321,0-0.641-0.084-0.922-0.247L8.14,1.728c-0.438-0.257-0.51-0.854-0.161-1.204c0.354-0.353,0.939-0.353,1.292,0l2.936,1.728c0.15,0.088,0.334,0.088,0.484,0l2.936-1.728c0.354-0.353,0.939-0.353,1.292,0c0.349,0.35,0.277,0.947-0.161,1.204L12.92,0.247C12.639,0.084,12.319,0,11.998,0z"/>
+      </svg>
+    ),
   },
   {
-    name: "Vitest",
-    color: "bg-yellow-500",
-    icon: () => <span className="text-[10px] font-bold">Vt</span>,
+    name: "Vite",
+    color: "bg-purple-600",
+    icon: () => (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="white">
+        <path d="M12.089 3.667c.355 0 .67.1.935.299.265.198.464.44.597.725.133.285.2.59.2.916 0 .325-.067.63-.2.915-.133.285-.332.527-.597.725-.265.198-.58.297-.935.297-.355 0-.67-.099-.935-.297-.265-.198-.464-.44-.597-.725-.133-.285-.2-.59-.2-.915 0-.326.067-.631.2-.916.133-.285.332-.527.597-.725.265-.198.58-.299.935-.299zm0 1.333c-.178 0-.335.05-.47.149-.135.099-.24.22-.315.363-.075.143-.112.295-.112.456 0 .161.037.313.112.456.075.143.18.264.315.363.135.099.292.149.47.149.178 0 .335-.05.47-.149.135-.099.24-.22.315-.363.075-.143.112-.295.112-.456 0-.161-.037-.313-.112-.456-.075-.143-.18-.264-.315-.363-.135-.099-.292-.149-.47-.149z"/>
+        <path d="M12.089 12c.355 0 .67.1.935.299.265.198.464.44.597.725.133.285.2.59.2.916 0 .325-.067.63-.2.915-.133.285-.332.527-.597.725-.265.198-.58.297-.935.297-.355 0-.67-.099-.935-.297-.265-.198-.464-.44-.597-.725-.133-.285-.2-.59-.2-.915 0-.326.067-.631.2-.916.133-.285.332-.527.597-.725.265-.198.58-.299.935-.299zm0 1.333c-.178 0-.335.05-.47.149-.135.099-.24.22-.315.363-.075.143-.112.295-.112.456 0 .161.037.313.112.456.075.143.18.264.315.363.135.099.292.149.47.149.178 0 .335-.05.47-.149.135-.099.24-.22.315-.363.075-.143.112-.295.112-.456 0-.161-.037-.313-.112-.456-.075-.143-.18-.264-.315-.363-.135-.099-.292-.149-.47-.149z"/>
+        <path d="M12.089 20.333c.355 0 .67.1.935.299.265.198.464.44.597.725.133.285.2.59.2.916 0 .325-.067.63-.2.915-.133.285-.332.527-.597.725-.265.198-.58.297-.935.297-.355 0-.67-.099-.935-.297-.265-.198-.464-.44-.597-.725-.133-.285-.2-.59-.2-.915 0-.326.067-.631.2-.916.133-.285.332-.527.597-.725.265-.198.58-.299.935-.299zm0 1.333c-.178 0-.335.05-.47.149-.135.099-.24.22-.315.363-.075.143-.112.295-.112.456 0 .161.037.313.112.456.075.143.18.264.315.363.135.099.292.149.47.149.178 0 .335-.05.47-.149.135-.099.24-.22.315-.363.075-.143.112-.295.112-.456 0-.161-.037-.313-.112-.456-.075-.143-.18-.264-.315-.363-.135-.099-.292-.149-.47-.149z"/>
+      </svg>
+    ),
   },
 ];
 
@@ -85,40 +127,42 @@ export function TechStackSection() {
             <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900">
               Tech stack
             </h3>
-            <p className="mt-2 text-gray-600">
-              Built with a modern toolchain for speed and reliability.
-            </p>
+            <p className="mt-2 text-gray-600">Powered by Gemini</p>
           </div>
-          <Link
-            to="/techstack"
-            className="hidden md:inline-flex items-center rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800"
-          >
-            View details
-          </Link>
         </div>
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {stack.map((s) => (
             <div
               key={s.name}
-              className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-800 shadow-sm flex items-center gap-3"
+              className={`relative cursor-pointer z-0 flex flex-col items-start gap-2 overflow-hidden rounded-md border border-zinc-300 bg-zinc-100 px-4 py-3 font-semibold text-zinc-800 transition-all duration-500 before:absolute before:inset-0 before:-z-10 before:translate-x-[150%] before:translate-y-[150%] before:scale-[2.5] before:rounded-[100%] before:bg-brand-cta before:transition-transform before:duration-1000 before:content-["\""] hover:scale-105 hover:text-gray-900 hover:before:translate-x-[0%] hover:before:translate-y-[0%] active:scale-95`}
             >
               <div
                 className={`h-7 w-7 rounded-md text-white grid place-items-center ${s.color}`}
               >
                 {s.icon && s.icon()}
               </div>
-              <span>{s.name}</span>
+              <span className="text-gray-900">{s.name}</span>
+
+              {/* Cursor visual attached to this tile (shows when hovering the tile) */}
+              <Cursor
+                attachToParent
+                springConfig={{ stiffness: 300, damping: 28 }}
+                variants={{
+                  initial: { scale: 0.3, opacity: 0 },
+                  animate: { scale: 1, opacity: 1 },
+                  exit: { scale: 0.3, opacity: 0 },
+                }}
+                transition={{
+                  ease: "easeInOut",
+                  duration: 0.15,
+                }}
+              >
+                <MouseIcon className="h-6 w-6" />
+              </Cursor>
             </div>
           ))}
         </div>
-        <div className="mt-6 md:hidden">
-          <Link
-            to="/techstack"
-            className="inline-flex items-center rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800"
-          >
-            View details
-          </Link>
-        </div>
+        <div className="mt-6 md:hidden" />
       </div>
     </section>
   );

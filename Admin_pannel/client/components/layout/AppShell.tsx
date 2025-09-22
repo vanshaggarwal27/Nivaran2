@@ -21,17 +21,27 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { Badge } from "@/components/ui/badge";
 
-const nav = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/issues", label: "Issues", icon: ListChecks },
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/leaderboard", label: "Leaderboard", icon: Medal },
-  { to: "/settings", label: "Settings", icon: Settings },
-];
+function buildNav(role?: string) {
+  if (role === "supervisor") {
+    return [
+      { to: "/supervisor", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/supervisor/issues", label: "My Issues", icon: ListChecks },
+      { to: "/supervisor/analytics", label: "Analytics", icon: BarChart3 },
+    ];
+  }
+  return [
+    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/issues", label: "Issues", icon: ListChecks },
+    { to: "/analytics", label: "Analytics", icon: BarChart3 },
+    { to: "/leaderboard", label: "Leaderboard", icon: Medal },
+    { to: "/settings", label: "Settings", icon: Settings },
+  ];
+}
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const nav = buildNav(user?.role);
   return (
     <SidebarProvider>
       <Sidebar className="border-r">
@@ -114,6 +124,14 @@ function pageTitle(path: string) {
       return "Leaderboard";
     case "/settings":
       return "Settings";
+    case "/supervisor":
+      return "Dashboard";
+    case "/supervisor/issues":
+      return "My Issues";
+    case "/supervisor/analytics":
+      return "Analytics";
+    case "/notifications":
+      return "Notifications";
     default:
       return "NIVARAN";
   }

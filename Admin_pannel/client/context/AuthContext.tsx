@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     setUser(u);
     localStorage.setItem(AUTH_KEY, JSON.stringify(u));
-    navigate("/");
+    navigate(role === "supervisor" ? "/supervisor" : "/");
   };
 
   const logout = () => {
