@@ -136,11 +136,8 @@ export const MenuBar: React.FC<MenuBarProps> = ({ active = "dashboard", onSelect
             label={it.label}
             active={active === it.key}
             onClick={() => {
+              // Delegate navigation to the parent via onSelect to avoid changing the current page URL unintentionally
               onSelect?.(it.key);
-              if (it.to) {
-                // navigate to provided path/anchor
-                window.location.href = it.to;
-              }
             }}
             icon={it.icon}
           />
