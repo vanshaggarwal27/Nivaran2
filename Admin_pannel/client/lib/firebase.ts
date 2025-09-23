@@ -144,7 +144,7 @@ function mapCategory(c?: string): string {
   if (v.includes("pothole")) return "Pothole";
   if (v.includes("garbage")) return "Garbage";
   if (v.includes("streetlight")) return "Streetlight";
-  if (v.includes("water")) return "Water";
+  if (v.includes("water") || v.includes("waterlogging")) return "Water";
   return "Garbage";
 }
 
@@ -157,8 +157,11 @@ function toIso(x: any): string {
 export function subscribeComplaints(onChange: (issues: IssueLite[]) => void) {
   const dbInstance = getDb();
   if (!dbInstance) return () => {};
-  const q = query(collection(dbInstance, "complaints"), orderBy("created_at", "desc"));
-  const unsub = onSnapshot(q as any, (snap: any) => {
+  let qRef: any = collection(dbInstance, "complaints");
+  try {
+    qRef = query(qRef, orderBy("created_at", "desc"));
+  } catch {}
+  const unsub = onSnapshot(qRef, (snap: any) => {
     const list: IssueLite[] = [];
     snap.forEach((doc: any) => {
       const d = doc.data() as Complaint;
@@ -171,7 +174,7 @@ export function subscribeComplaints(onChange: (issues: IssueLite[]) => void) {
         title: d.title || "Untitled",
         description: d.description || "",
         category,
-        imageUrl: d.media_url || null,
+        imageUrl: (d.media_url as string) || null,
         latitude: isFinite(lat) ? lat : 0,
         longitude: isFinite(lng) ? lng : 0,
         address: "",
@@ -180,7 +183,7 @@ export function subscribeComplaints(onChange: (issues: IssueLite[]) => void) {
         upvotes: 0,
         priority: 2,
         status: "Pending",
-        reporter: { id: d.user_id || "unknown", name: "Citizen" },
+        reporter: { id: (d.user_id as string) || "unknown", name: "Citizen" },
         duplicateOf: null,
         groupId: "",
       });
