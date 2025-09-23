@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { Issue, Status, Priority, generateIssues, detectAndMergeDuplicates } from "@/lib/nivaran";
-import { upsertIssueLocation, isFirebaseConfigured } from "@/lib/firebase";
+import { upsertIssueLocation, isFirebaseConfigured, subscribeComplaints } from "@/lib/firebase";
 
 interface DataContextValue {
   issues: Issue[];
@@ -12,23 +12,21 @@ interface DataContextValue {
 }
 
 const DataContext = createContext<DataContextValue | undefined>(undefined);
-const KEY = "niva:issues:v1";
+const KEY = "niva:issues:v2";
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const [issues, setIssues] = useState<Issue[]>([]);
+  const mockRef = useRef<Issue[] | null>(null);
 
   useEffect(() => {
-    const raw = localStorage.getItem(KEY);
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw) as Issue[];
-        setIssues(parsed);
-        return;
-      } catch {
-        localStorage.removeItem(KEY);
-      }
+    if (isFirebaseConfigured()) {
+      // Firebase present: start with empty list; subscribe in another effect
+      setIssues([]);
+      localStorage.removeItem(KEY);
+      return;
     }
-    const seed = detectAndMergeDuplicates(generateIssues(6000));
+    const seed = detectAndMergeDuplicates(generateIssues(5));
+    mockRef.current = seed;
     setIssues(seed);
     localStorage.setItem(KEY, JSON.stringify(seed));
   }, []);
@@ -37,6 +35,41 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setIssues(next);
     localStorage.setItem(KEY, JSON.stringify(next));
   };
+
+  // Firestore realtime subscription: merge live complaints with 5 local mocks
+  useEffect(() => {
+    if (!isFirebaseConfigured()) return;
+    const unsub = subscribeComplaints((live) => {
+      // Firebase mode: show only live complaints
+      const merged = live.map(toIssue);
+      setIssues(merged);
+    });
+    return () => {
+      if (typeof unsub === "function") unsub();
+    };
+  }, []);
+
+  function toIssue(x: any): Issue {
+    return {
+      id: x.id,
+      title: x.title,
+      description: x.description,
+      category: x.category as any,
+      imageUrl: x.imageUrl,
+      latitude: x.latitude,
+      longitude: x.longitude,
+      address: x.address,
+      createdAt: x.createdAt,
+      updatedAt: x.updatedAt,
+      upvotes: x.upvotes,
+      priority: x.priority,
+      status: x.status as any,
+      assignment: { staffId: null, staffName: null, assignedAt: null },
+      reporter: x.reporter,
+      duplicateOf: null,
+      groupId: "",
+    };
+  }
 
   const assign: DataContextValue["assign"] = (id, staffName) => {
     write(
