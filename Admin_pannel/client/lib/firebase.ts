@@ -189,15 +189,3 @@ export function subscribeComplaints(onChange: (issues: IssueLite[]) => void) {
   });
   return unsub;
 }
-
-function awaitImportFirestoreHelpers() {
-  // dynamic import-compatible accessors to avoid tree-shaking issues
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const f = require("firebase/firestore");
-  return {
-    onSnapshot: f.onSnapshot as typeof import("firebase/firestore").onSnapshot,
-    collection: f.collection as typeof import("firebase/firestore").collection,
-    query: f.query as typeof import("firebase/firestore").query,
-    orderBy: f.orderBy as typeof import("firebase/firestore").orderBy,
-  };
-}
