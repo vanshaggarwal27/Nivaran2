@@ -12,22 +12,18 @@ interface DataContextValue {
 }
 
 const DataContext = createContext<DataContextValue | undefined>(undefined);
-const KEY = "niva:issues:v1";
+const KEY = "niva:issues:v2";
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const [issues, setIssues] = useState<Issue[]>([]);
   const mockRef = useRef<Issue[] | null>(null);
 
   useEffect(() => {
-    const raw = localStorage.getItem(KEY);
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw) as Issue[];
-        setIssues(parsed);
-        return;
-      } catch {
-        localStorage.removeItem(KEY);
-      }
+    if (isFirebaseConfigured()) {
+      // Firebase present: start with empty list; subscribe in another effect
+      setIssues([]);
+      localStorage.removeItem(KEY);
+      return;
     }
     const seed = detectAndMergeDuplicates(generateIssues(5));
     mockRef.current = seed;
@@ -44,10 +40,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isFirebaseConfigured()) return;
     const unsub = subscribeComplaints((live) => {
-      const base = mockRef.current || [];
-      const merged = [...base, ...live.map(toIssue)];
+      // Firebase mode: show only live complaints
+      const merged = live.map(toIssue);
       setIssues(merged);
-      localStorage.setItem(KEY, JSON.stringify(merged));
     });
     return () => {
       if (typeof unsub === "function") unsub();
