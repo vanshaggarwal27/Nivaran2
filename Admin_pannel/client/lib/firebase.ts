@@ -157,8 +157,7 @@ function toIso(x: any): string {
 export function subscribeComplaints(onChange: (issues: IssueLite[]) => void) {
   const dbInstance = getDb();
   if (!dbInstance) return () => {};
-  const { onSnapshot, collection, query, orderBy } = awaitImportFirestoreHelpers();
-  const q = orderBy ? query(collection(dbInstance, "complaints"), orderBy("created_at", "desc")) : collection(dbInstance, "complaints");
+  const q = query(collection(dbInstance, "complaints"), orderBy("created_at", "desc"));
   const unsub = onSnapshot(q as any, (snap: any) => {
     const list: IssueLite[] = [];
     snap.forEach((doc: any) => {
